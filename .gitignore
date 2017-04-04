@@ -38,3 +38,4 @@ dist/
 
 config.ts
 dist
+providers/
