@@ -14,7 +14,8 @@ export function productListSkeleton(productList){
            <div class="${(product.statut === true)? 'lineThrough' : ''}">
               ${product.name}
               <a href="#!" class="secondary-content">
-                <i class="material-icons">send</i>
+                <i class="edit material-icons">mode_edit</i>
+                <i class="del material-icons  red-text text-darken-1">delete_forever</i>
               </a>
             </div>
         </li>
