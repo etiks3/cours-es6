@@ -3,7 +3,7 @@
  * @Date:   30-06-2017
  * @Email:  contact@nicolasfazio.ch
  * @Last modified by:   webmaster-fazio
- * @Last modified time: 03-07-2017
+ * @Last modified time: 04-07-2017
  */
 body {
   background: #eeeeee;
@@ -11,4 +11,8 @@ body {
 }
 .carousel img {
   border-radius: 100%
+}
+
+.lineThrough {
+  text-decoration: line-through;
 }

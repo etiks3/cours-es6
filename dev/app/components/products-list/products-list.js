@@ -10,7 +10,20 @@ import { productListSkeleton } from './products-list-ui'
 
 export class ProductsList {
   constructor(){
-    this.productList = ['aa', 'bb', 'cc']
+    this.productList = [
+      {
+        name: 'pomme',
+        statut: false
+      },
+      {
+        name: 'poire',
+        statut: false
+      },
+      {
+        name: 'choco',
+        statut: false
+      }
+    ]
     this.initUI()
     this.loadEventUI()
   }
@@ -41,8 +54,10 @@ export class ProductsList {
       let productItem = e.target.closest('li')
       console.log(this.productList[productItem.id])
       // supprimer l'element (avec index) du tableau de produits
-      this.productList.splice(productItem.id, 1)
-      // recarger la vue
+      //this.productList.splice(productItem.id, 1)
+      this.productList[productItem.id].statut = !this.productList[productItem.id].statut
+      console.log(this.productList[productItem.id]);
+      // recharger la vue
       this.initUI()
     })
   }

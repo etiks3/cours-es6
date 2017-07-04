@@ -8,11 +8,11 @@
 
 export function productListSkeleton(productList){
   return `
-    ${productList.map((el, index)=> {
+    ${productList.map((product, index)=> {
       return `
         <li id="${index}"  class="collection-item">
-           <div>
-              ${el}
+           <div class="${(product.statut === true)? 'lineThrough' : ''}">
+              ${product.name}
               <a href="#!" class="secondary-content">
                 <i class="material-icons">send</i>
               </a>
