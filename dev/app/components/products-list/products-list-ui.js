@@ -3,14 +3,14 @@
  * @Date:   03-07-2017
  * @Email:  contact@nicolasfazio.ch
  * @Last modified by:   webmaster-fazio
- * @Last modified time: 03-07-2017
+ * @Last modified time: 04-07-2017
  */
 
 export function productListSkeleton(productList){
   return `
-    ${productList.map(el => {
+    ${productList.map((el, index)=> {
       return `
-        <li class="collection-item">
+        <li id="${index}"  class="collection-item">
            <div>
               ${el}
               <a href="#!" class="secondary-content">

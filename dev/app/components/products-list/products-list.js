@@ -35,5 +35,15 @@ export class ProductsList {
           e.target.value = ''
       }
     })
+
+    document.querySelector('ul').addEventListener('click',e => {
+      // rechercher le parent de type LI pour recupérer son ID
+      let productItem = e.target.closest('li')
+      console.log(this.productList[productItem.id])
+      // supprimer l'element (avec index) du tableau de produits
+      this.productList.splice(productItem.id, 1)
+      // recarger la vue
+      this.initUI()
+    })
   }
 }
