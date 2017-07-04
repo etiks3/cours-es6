@@ -1,19 +1,19 @@
 /**
-* @Author: Nicolas Fazio <webmaster-fazio>
-* @Date:   15-09-2016
-* @Email:  contact@nicolasfazio.ch
+ * @Author: Nicolas Fazio <webmaster-fazio>
+ * @Date:   28-06-2017
+ * @Email:  contact@nicolasfazio.ch
  * @Last modified by:   webmaster-fazio
- * @Last modified time: 04-04-2017
-*/
+ * @Last modified time: 30-06-2017
+ */
 
-import { UserPage } from '../../pages/user/user';
+import { UserPage } from '../user/user'
+import { homeSkeleton } from './home-ui'
 
 export class HomePage {
-
-  constructor(appBody){
-    this.appBody = appBody
-    this.pageTitle = 'Hello world';
-    this.initUI();
+  constructor(app) {
+    this.app = app
+    this.initUI()
+    this.loadEventUI()
   }
 
   initUI(){
@@ -21,45 +21,32 @@ export class HomePage {
     if(document.getElementsByTagName("section")[0]){
       document.getElementsByTagName("section")[0].parentNode.removeChild(document.getElementsByTagName("section")[0])
     }
-    // create page skeleton
-    let pageSkeleton = `
-      <section>
-        <h1>${this.pageTitle}</h1>
-        <form>
-          <p>
-            <label for="email">Email:</label> <input type="email" name="email" value="" placeholder="votreemail.ch"  /><br/>
-            <label for="password">Password:</label> <input type="password" name="password" value=""  /><br/>
-            <button>Login</button>
-          </p>
-        </form>
-      </section>`;
-    // add page skeleton in body
-    this.appBody.insertAdjacentHTML( 'afterbegin', pageSkeleton )
-    this.loadEventUI()
-
+    let data = {};
+    let skeleton = homeSkeleton(data);
+    this.app.insertAdjacentHTML('beforeend', skeleton) ;
+    $('.carousel.carousel-slider').carousel({fullWidth: true});
   }
 
   loadEventUI(){
-    let loginForm = document.getElementsByTagName("form")[0];
-    loginForm.addEventListener("submit",  event => this.onLogin(event), false)
+    console.log('load Event UI');
+    document.forms[0].addEventListener('submit', event => this.onLogin(event))
   }
 
   onLogin(event){
     event.preventDefault()
-    let validationInput = 0
-    let formInput = {}
-    let form = document.forms[0].elements
-    for (let i = 0; i < form.length; i++) {
-      if(form[i].value){
-        formInput[form[i].name] = form[i].value
-        validationInput++
-      }
-    }
-    console.log(formInput)
-    if(validationInput === 2){
-      console.log('load UserPage')
-      new UserPage(this.appBody,formInput);
-    }
+    console.log(
+      document.forms[0][0].value,  // document.getElementById('email').value
+      document.forms[0][1].value // document.getElementById('password').value
+    );
+    new UserPage(this.app, document.forms[0][0].value, document.forms[0][1].value)
+    // let dataReady = {};
+    // let formData = document.forms[0]
+    // for (var i = 0; i < formData.length; i++) {
+    //   if(formData[i].value && formData[i].value !== ''){
+    //     console.log(formData[i].value);
+    //     dataReady[formData[i].id] = formData[i].value
+    //   }
+    // }
+    // new UserPage(dataReady)
   }
-
 }

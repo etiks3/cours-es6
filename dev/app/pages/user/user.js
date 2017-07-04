@@ -1,32 +1,44 @@
 /**
-* @Author: Nicolas Fazio <webmaster-fazio>
-* @Date:   15-09-2016
-* @Email:  contact@nicolasfazio.ch
+ * @Author: Nicolas Fazio <webmaster-fazio>
+ * @Date:   28-06-2017
+ * @Email:  contact@nicolasfazio.ch
  * @Last modified by:   webmaster-fazio
- * @Last modified time: 05-04-2017
-*/
+ * @Last modified time: 03-07-2017
+ */
+
+import { userSkeleton, UserClassSkeleton } from './user-ui'
+import { ProductsList } from '../../components/products-list/products-list'
 
 export class UserPage {
-
-  constructor(appBody,formInput){
-    this.appBody = appBody
-    this.formData = formInput
-    this.pageTitle = "Hello";
-    this.initUI();
+  constructor(app, email, pwd) {
+    this.app = app
+    this.email = email
+    this.pwd = pwd
+    this.initUI()
+    new ProductsList();
+    this.loadEventUI()
   }
 
-    initUI(){
-      // remove all section before display UI
-      if(document.getElementsByTagName("section")[0]){
-        document.getElementsByTagName("section")[0].parentNode.removeChild(document.getElementsByTagName("section")[0])
-      }
-      // create page skeleton
-      let pageSkeleton = `
-        <section>
-          <h1>${this.pageTitle} ${this.formData.email} !</h1>
-        </section>
-      `;
-      // add page skeleton in body
-      this.appBody.insertAdjacentHTML( 'afterbegin', pageSkeleton )
+  initUI(){
+    // remove all section before display UI
+    if(document.getElementsByTagName("section")[0]){
+      document.getElementsByTagName("section")[0].parentNode.removeChild(document.getElementsByTagName("section")[0])
     }
+    let data = {
+      email: this.email,
+      pwd: this.pwd,
+      desc: 'demo passage info',
+      autreTest: 'Encore des info'
+    }
+
+    this.app.insertAdjacentHTML('afterbegin', userSkeleton(data/*, this.productList*/))
+    //this.app.insertAdjacentHTML('afterbegin', UserClassSkeleton.get(data, this.productList))
+  }
+
+  loadEventUI(){
+
+    document.querySelector('form').addEventListener('submit', e =>{
+      e.preventDefault()
+    })
+  }
 }

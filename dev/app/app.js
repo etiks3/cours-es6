@@ -1,25 +1,23 @@
 /**
-* @Author: Nicolas Fazio <webmaster-fazio>
-* @Date:   01-09-2016
-* @Email:  contact@nicolasfazio.ch
-* @Last modified by:   webmaster-fazio
-* @Last modified time: 15-09-2016
-*/
+ * @Author: Nicolas Fazio <webmaster-fazio>
+ * @Date:   28-06-2017
+ * @Email:  contact@nicolasfazio.ch
+ * @Last modified by:   webmaster-fazio
+ * @Last modified time: 29-06-2017
+ */
 
 import { HomePage } from './pages/home/home';
 
+// Definition
 class MyApp {
-
-  constructor(){
-    this.appBody = document.getElementsByTagName("app")[0];
+  constructor() {
+    this.app = document.querySelector("app")
+    new HomePage(this.app)
   }
-
-  start(){
-    // init HomePage
-    let homePage = new HomePage(this.appBody);
-  }
-
 }
 
-let myApp = new MyApp();
-myApp.start();
+
+
+
+// utilisation
+new MyApp()
