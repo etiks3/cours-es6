@@ -15,14 +15,14 @@ export class ProductsList {
     this.productList =  [];
     // demarer la class Firebase Preso
     this.database = new Database();
-    // utiliser la meth. read() qui est une promise
+    // utiliser la meth. read() qui retourn une promise
     this.database.read().then(resultatFB => {
       // console.log('productlist->', res.val());
       // parcourir l'objet retourné par Firebase avec un forEach() !! sans le .val()
       resultatFB.forEach(produit => {
         // lors du parcour on utilise le .val() pour afficher les parametres
         // et on .push() dans la liste de produit qui était vide.
-        this.productList.push(produit.val())
+        this.productList.push(produit)
       })
       // ensite... on peut afficher la lise ;-)
       this.initUI()
@@ -85,8 +85,11 @@ export class ProductsList {
       else {
         // sinon c'est qu'on a pas cliqué sur une icon => donc on trace le produit ;-)
         console.log(this.productList[productItem.id])
-        this.productList[productItem.id].statut = !this.productList[productItem.id].statut
-        console.log(this.productList[productItem.id]);
+        // this.productList[productItem.id].val().statut = !this.productList[productItem.id].val().statut
+        console.log(this.productList[productItem.id].val());
+        let fbProduct = this.productList[productItem.id];
+        let statut = !this.productList[productItem.id].val().statut;
+        this.database.update(fbProduct, statut);
       }
       // Et on recharger la vue dans tous les cas
       this.initUI()

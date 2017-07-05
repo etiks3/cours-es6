@@ -28,6 +28,13 @@ export class Database {
 
   }
 
+  update( product, statut ){
+    //console.log(product.key, product.val());
+    this.database.ref('productList/'+ product.key).update({
+      statut: statut
+    });
+  }
+
   delete(){
 
   }
