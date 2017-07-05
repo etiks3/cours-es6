@@ -19,7 +19,7 @@ export class ProductsList {
     this.database.read().then(resultatFB => {
       // console.log('productlist->', res.val());
       // parcourir l'objet retourné par Firebase avec un forEach() !! sans le .val()
-      res.forEach(produit => {
+      resultatFB.forEach(produit => {
         // lors du parcour on utilise le .val() pour afficher les parametres
         // et on .push() dans la liste de produit qui était vide.
         this.productList.push(produit.val())
