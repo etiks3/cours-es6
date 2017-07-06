@@ -3,7 +3,7 @@
  * @Date:   30-06-2017
  * @Email:  contact@nicolasfazio.ch
  * @Last modified by:   webmaster-fazio
- * @Last modified time: 30-06-2017
+ * @Last modified time: 06-07-2017
  */
 
 export function homeSkeleton(data){
@@ -17,12 +17,7 @@ export function homeSkeleton(data){
           <input type="password" name="" id="password" placeholder="your pwd"><br>
           <button class="deep-orange lighten-2 waves-effect waves-light btn">Submit</button>
         </form>
-        <div class="carousel carousel-slider">
-          <a class="carousel-item" href="#one!"><img src="https://lorempixel.com/800/400/food/1"></a>
-          <a class="carousel-item" href="#two!"><img src="https://lorempixel.com/800/400/food/2"></a>
-          <a class="carousel-item" href="#three!"><img src="https://lorempixel.com/800/400/food/3"></a>
-          <a class="carousel-item" href="#four!"><img src="https://lorempixel.com/800/400/food/4"></a>
-        </div>
+
       </div>
 
     </section>

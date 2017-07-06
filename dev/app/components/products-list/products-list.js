@@ -3,7 +3,7 @@
  * @Date:   03-07-2017
  * @Email:  contact@nicolasfazio.ch
  * @Last modified by:   webmaster-fazio
- * @Last modified time: 05-07-2017
+ * @Last modified time: 06-07-2017
  */
 
 import { productListSkeleton } from './products-list-ui'
@@ -16,18 +16,23 @@ export class ProductsList {
     // demarer la class Firebase Preso
     this.database = new Database();
     // utiliser la meth. read() qui retourn une promise
-    this.database.read().then(resultatFB => {
-      // console.log('productlist->', res.val());
-      // parcourir l'objet retourné par Firebase avec un forEach() !! sans le .val()
-      resultatFB.forEach(produit => {
-        // lors du parcour on utilise le .val() pour afficher les parametres
-        // et on .push() dans la liste de produit qui était vide.
-        this.productList.push(produit)
-      })
-      // ensite... on peut afficher la lise ;-)
-      this.initUI()
-      this.loadEventUI()
-    })
+    // this.database.read().then(resultatFB => {
+    //   // console.log('productlist->', res.val());
+    //   // parcourir l'objet retourné par Firebase avec un forEach() !! sans le .val()
+    //   resultatFB.forEach(produit => {
+    //     // lors du parcour on utilise le .val() pour afficher les parametres
+    //     // et on .push() dans la liste de produit qui était vide.
+    //     this.productList.push(produit)
+    //   })
+    //   // ensite... on peut afficher la lise ;-)
+    //   this.initUI()
+    //   this.loadEventUI()
+    // })
+    this.initUI()
+    this.loadEventUI()
+    // Firebase EventListener pour écouter SEULEMENT les modification de la base de donnée (BDD).
+    this.database.child_added()
+    this.database.child_changed()
   }
 
   initUI(){
@@ -50,12 +55,12 @@ export class ProductsList {
             statut: false
           }
           // ajouter le nouveau produit dans la liste
-          this.productList.push(newProduct)
+          // this.productList.push(newProduct)
           // ajouter a firebase
           this.database.push(newProduct)
 
           console.log(this.productList);
-          this.initUI()
+          // this.initUI()
           e.target.value = ''
       }
     })
@@ -84,15 +89,13 @@ export class ProductsList {
       }
       else {
         // sinon c'est qu'on a pas cliqué sur une icon => donc on trace le produit ;-)
-        console.log(this.productList[productItem.id])
-        // this.productList[productItem.id].val().statut = !this.productList[productItem.id].val().statut
-        console.log(this.productList[productItem.id].val());
-        let fbProduct = this.productList[productItem.id];
-        let statut = !this.productList[productItem.id].val().statut;
-        this.database.update(fbProduct, statut);
+        let statut  = !productItem.childNodes[1].classList.contains('lineThrough');
+        let pID = productItem.dataset.fbid;
+        console.log(pID);
+        this.database.update(pID, statut);
       }
       // Et on recharger la vue dans tous les cas
-      this.initUI()
+      // this.initUI()
     })
   }
 }

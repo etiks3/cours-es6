@@ -3,7 +3,7 @@
  * @Date:   05-07-2017
  * @Email:  contact@nicolasfazio.ch
  * @Last modified by:   webmaster-fazio
- * @Last modified time: 05-07-2017
+ * @Last modified time: 06-07-2017
  */
 
 // import Firebase node module
@@ -12,6 +12,7 @@ import * as firebase from "firebase";
 export class Database {
   constructor() {
     // Use database() service from Firebase
+    this.productList =  [];
     this.database = firebase.database();
     console.log(this.database);
   }
@@ -28,11 +29,46 @@ export class Database {
 
   }
 
-  update( product, statut ){
+  update( pID, statut ){
     //console.log(product.key, product.val());
-    this.database.ref('productList/'+ product.key).update({
+    this.database.ref('productList/'+ pID).update({
       statut: statut
     });
+  }
+
+  child_added(){
+    // more advenced technique with EventEmitter:
+    // https://www.npmjs.com/package/event-emitter
+    this.database.ref('productList').on('child_added', snapshot => {
+      console.log('child_added', snapshot.val());
+      let newProduct = `
+      <li data-fbid="${snapshot.key}" class="collection-item">
+         <div class="${(snapshot.val().statut === true)? 'lineThrough' : ''}">
+            ${snapshot.val().name}
+            <a href="#!" class="secondary-content">
+              <i class="edit material-icons">mode_edit</i>
+              <i class="del material-icons  red-text text-darken-1">delete_forever</i>
+            </a>
+          </div>
+      </li>
+      `;
+      document.querySelector('ul.collection').insertAdjacentHTML('beforeend', newProduct)
+    });
+  }
+
+  child_changed(){
+    // more advenced technique with EventEmitter:
+    // https://www.npmjs.com/package/event-emitter
+      this.database.ref('productList').on('child_changed', snapshot => {
+        console.log('child_changed->', snapshot.key ,snapshot.val());
+
+
+        document.querySelector('[data-fbid="'+snapshot.key+'"]')
+                                                                .childNodes[1]
+                                                                .classList
+                                                                .toggle('lineThrough')
+
+      });
   }
 
   delete(){
