@@ -10,7 +10,9 @@ import { productListSkeleton } from './products-list-ui'
 import { Database } from '../../providers/firebase/database'
 
 export class ProductsList {
-  constructor(){
+  constructor(user){
+    this.user = user;
+    console.log(this.user);
     // definir un tableau vide
     this.productList =  [];
     // demarer la class Firebase Preso
@@ -31,9 +33,9 @@ export class ProductsList {
     this.initUI()
     this.loadEventUI()
     // Firebase EventListener pour écouter SEULEMENT les modification de la base de donnée (BDD).
-    this.database.child_added()
-    this.database.child_changed()
-    this.database.child_remove()
+    this.database.child_added(this.user.uid)
+    this.database.child_changed(this.user.uid)
+    this.database.child_remove(this.user.uid)
   }
 
   initUI(){
@@ -58,7 +60,7 @@ export class ProductsList {
           // ajouter le nouveau produit dans la liste
           // this.productList.push(newProduct)
           // ajouter a firebase
-          this.database.push(newProduct)
+          this.database.push(this.user.uid, newProduct)
 
           console.log(this.productList);
           // this.initUI()
@@ -82,7 +84,7 @@ export class ProductsList {
         // supprimer l'element (avec index) du tableau de produits
         // this.productList.splice(productItem.id, 1)
         console.log('prod', productItem.dataset.fbid);
-        this.database.delete(productItem.dataset.fbid)
+        this.database.delete(this.user.uid, productItem.dataset.fbid)
       }
       else if (
         // si le I a la class .edit et à le statut à true
@@ -96,7 +98,7 @@ export class ProductsList {
         let statut  = !productItem.childNodes[1].classList.contains('lineThrough');
         let pID = productItem.dataset.fbid;
         console.log(pID);
-        this.database.update(pID, statut);
+        this.database.update(this.user.uid, pID, statut);
       }
       // Et on recharger la vue dans tous les cas
       // this.initUI()

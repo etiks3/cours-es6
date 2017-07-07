@@ -7,9 +7,9 @@
  */
 
 import { HomePage } from './pages/home/home';
+import { UserPage } from './pages/user/user';
 // import Firebase node module ($ npm install --save firebase)
 import * as firebase from "firebase";
-import { Database } from './providers/firebase/database.js'
 
 // Config for Firebase
 const CONFIG = {
@@ -24,32 +24,30 @@ const CONFIG = {
 // Definition
 class MyApp {
   constructor() {
+    // App DOM entrie
+    this.app = document.querySelector("app")
     // Initialize Firebase
     firebase.initializeApp(CONFIG);
 
-    this.database = new Database();
-    let googleProvider = new firebase.auth.GoogleAuthProvider();
-    firebase.auth().signInWithPopup(googleProvider)
-    .then((result) =>{
-      let token = result.credential.accessToken;
-      let user = result.user;
-      console.log(result);
+    firebase.auth().onAuthStateChanged((user)=> {
+      if (user) {
+        // User is signed in.
+        console.log('user auth', user);
+        // envoyer l'user sur la page user.js
+        new UserPage(this.app, user, '')
 
-      this.database.set('userProfil',user)
+      } else {
+        // No user is signed in.
+        // envoyer l'user sur home.js
+        console.log('no user auth');
+        new HomePage(this.app)
 
-    }).catch((error)=> {
-      console.log(error);
-      let errorCode = error.code;
-      let errorMessage = error.message;
-      let email = error.email;
-      let credential = error.credential;
+      }
     });
 
 
-    // App DOM entrie
-    this.app = document.querySelector("app")
+
     // Load HomePage()
-    new HomePage(this.app)
   }
 }
 

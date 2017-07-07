@@ -3,19 +3,20 @@
  * @Date:   28-06-2017
  * @Email:  contact@nicolasfazio.ch
  * @Last modified by:   webmaster-fazio
- * @Last modified time: 03-07-2017
+ * @Last modified time: 07-07-2017
  */
 
 import { userSkeleton, UserClassSkeleton } from './user-ui'
 import { ProductsList } from '../../components/products-list/products-list'
 
 export class UserPage {
-  constructor(app, email, pwd) {
+  constructor(app, userFB, pwd) {
     this.app = app
-    this.email = email
+    this.email = userFB.email
+    this.user = userFB
     this.pwd = pwd
     this.initUI()
-    new ProductsList();
+    new ProductsList(this.user);
     this.loadEventUI()
   }
 

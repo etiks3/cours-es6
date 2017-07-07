@@ -21,8 +21,8 @@ export class Database {
     return this.database.ref('productList').once('value')
   }
 
-  push(newProduct){
-    this.database.ref('productList').push(newProduct);
+  push(uid, newProduct){
+    this.database.ref('productList').child(uid).push(newProduct);
   }
 
   set(collection, user){
@@ -34,17 +34,17 @@ export class Database {
     });
   }
 
-  update( pID, statut ){
+  update( uid, pID, statut ){
     //console.log(product.key, product.val());
-    this.database.ref('productList/'+ pID).update({
+    this.database.ref('productList/'+ uid + '/'+ pID).update({
       statut: statut
     });
   }
 
-  child_added(){
+  child_added(uid){
     // more advenced technique with EventEmitter:
     // https://www.npmjs.com/package/event-emitter
-    this.database.ref('productList').orderByChild('statut').on('child_added', snapshot => {
+    this.database.ref('productList').child(uid).on('child_added', snapshot => {
     //this.database.ref('productList').orderByChild('statut').equalTo(true).on('child_added', snapshot => {
       console.log('child_added', snapshot.val());
       let newProduct = `
@@ -62,10 +62,10 @@ export class Database {
     });
   }
 
-  child_changed(){
+  child_changed(uid){
     // more advenced technique with EventEmitter:
     // https://www.npmjs.com/package/event-emitter
-      this.database.ref('productList').on('child_changed', snapshot => {
+      this.database.ref('productList').child(uid).on('child_changed', snapshot => {
         console.log('child_changed->', snapshot.key ,snapshot.val());
 
 
@@ -77,8 +77,8 @@ export class Database {
       });
   }
 
-  child_remove(){
-    this.database.ref('productList').on('child_removed', snapshot => {
+  child_remove(uid){
+    this.database.ref('productList').child(uid).on('child_removed', snapshot => {
       let elementLI = document.querySelector('[data-fbid="'+snapshot.key+'"]');
       console.log('child_removed ->', elementLI);
       if(elementLI){
@@ -87,9 +87,9 @@ export class Database {
     })
   }
 
-  delete(pID){
+  delete(uid, pID){
     console.log('data', pID);
-    this.database.ref('productList').child(pID).remove();
+    this.database.ref('productList').child(uid).child(pID).remove();
     // this.database.ref('productList/'+pID).remove();
   }
 
