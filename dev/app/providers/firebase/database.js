@@ -3,7 +3,7 @@
  * @Date:   05-07-2017
  * @Email:  contact@nicolasfazio.ch
  * @Last modified by:   webmaster-fazio
- * @Last modified time: 06-07-2017
+ * @Last modified time: 07-07-2017
  */
 
 // import Firebase node module
@@ -71,8 +71,20 @@ export class Database {
       });
   }
 
-  delete(){
+  child_remove(){
+    this.database.ref('productList').on('child_removed', snapshot => {
+      let elementLI = document.querySelector('[data-fbid="'+snapshot.key+'"]');
+      console.log('child_removed ->', elementLI);
+      if(elementLI){
+        elementLI.parentNode.removeChild(elementLI)
+      }
+    })
+  }
 
+  delete(pID){
+    console.log('data', pID);
+    this.database.ref('productList').child(pID).remove();
+    // this.database.ref('productList/'+pID).remove();
   }
 
 }

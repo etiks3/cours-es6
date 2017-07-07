@@ -3,7 +3,7 @@
  * @Date:   03-07-2017
  * @Email:  contact@nicolasfazio.ch
  * @Last modified by:   webmaster-fazio
- * @Last modified time: 06-07-2017
+ * @Last modified time: 07-07-2017
  */
 
 import { productListSkeleton } from './products-list-ui'
@@ -33,6 +33,7 @@ export class ProductsList {
     // Firebase EventListener pour écouter SEULEMENT les modification de la base de donnée (BDD).
     this.database.child_added()
     this.database.child_changed()
+    this.database.child_remove()
   }
 
   initUI(){
@@ -74,11 +75,14 @@ export class ProductsList {
       if(
         // si le I a la class .del et à le statut à true
         e.target.nodeName === 'I' &&
-        this.productList[productItem.id].statut === true &&
+        //this.productList[productItem.id].statut === true &&
+        productItem.childNodes[1].classList.contains('lineThrough') &&
         e.target.classList.contains('del')
       ){
         // supprimer l'element (avec index) du tableau de produits
-        this.productList.splice(productItem.id, 1)
+        // this.productList.splice(productItem.id, 1)
+        console.log('prod', productItem.dataset.fbid);
+        this.database.delete(productItem.dataset.fbid)
       }
       else if (
         // si le I a la class .edit et à le statut à true
