@@ -39,7 +39,8 @@ export class Database {
   child_added(){
     // more advenced technique with EventEmitter:
     // https://www.npmjs.com/package/event-emitter
-    this.database.ref('productList').on('child_added', snapshot => {
+    this.database.ref('productList').orderByChild('statut').on('child_added', snapshot => {
+    //this.database.ref('productList').orderByChild('statut').equalTo(true).on('child_added', snapshot => {
       console.log('child_added', snapshot.val());
       let newProduct = `
       <li data-fbid="${snapshot.key}" class="collection-item">
