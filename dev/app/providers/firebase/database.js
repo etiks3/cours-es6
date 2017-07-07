@@ -25,8 +25,13 @@ export class Database {
     this.database.ref('productList').push(newProduct);
   }
 
-  set(){
-
+  set(collection, user){
+    console.log(collection, user);
+    this.database.ref(collection).child(user.uid).set({
+      uid: user.uid,
+      displayName: user.displayName,
+      email: user.email
+    });
   }
 
   update( pID, statut ){
