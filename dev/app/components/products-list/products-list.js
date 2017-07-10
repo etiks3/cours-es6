@@ -3,43 +3,25 @@
  * @Date:   03-07-2017
  * @Email:  contact@nicolasfazio.ch
  * @Last modified by:   webmaster-fazio
- * @Last modified time: 07-07-2017
+ * @Last modified time: 10-07-2017
  */
 
-import { productListSkeleton } from './products-list-ui'
+import { productListSkeleton, productItemSkeleton } from './products-list-ui'
 import { Database } from '../../providers/firebase/database'
 
 export class ProductsList {
   constructor(user){
     this.user = user;
-    console.log(this.user);
-    // definir un tableau vide
-    this.productList =  [];
     // demarer la class Firebase Preso
     this.database = new Database();
-    // utiliser la meth. read() qui retourn une promise
-    // this.database.read().then(resultatFB => {
-    //   // console.log('productlist->', res.val());
-    //   // parcourir l'objet retourné par Firebase avec un forEach() !! sans le .val()
-    //   resultatFB.forEach(produit => {
-    //     // lors du parcour on utilise le .val() pour afficher les parametres
-    //     // et on .push() dans la liste de produit qui était vide.
-    //     this.productList.push(produit)
-    //   })
-    //   // ensite... on peut afficher la lise ;-)
-    //   this.initUI()
-    //   this.loadEventUI()
-    // })
     this.initUI()
     this.loadEventUI()
-    // Firebase EventListener pour écouter SEULEMENT les modification de la base de donnée (BDD).
-    this.database.child_added(this.user.uid)
-    this.database.child_changed(this.user.uid)
-    this.database.child_remove(this.user.uid)
+    // Firebase EventListener pour écouter les modification de la base de donnée (BDD).
+    this.firebaseEvent(this.user.uid)
   }
 
   initUI(){
-    let skeleton = productListSkeleton(this.productList)
+    let skeleton = productListSkeleton([])
     if(document.querySelector('ul')){
       document.querySelector('ul.collection.with-header').innerHTML = '';
     }
@@ -47,25 +29,27 @@ export class ProductsList {
   }
 
   loadEventUI(){
+    // check if all element are in DOM
+    if(!document.querySelector('#search') && !document.querySelector('ul')){
+      return;
+    }
     document.querySelector('#search').addEventListener('keyup', e =>{
       e.preventDefault()
-
-      if(e.keyCode === 13){
-          console.log(e.target.value);
-          // formater le nouveau produit
-          let newProduct = {
-            name: e.target.value,
-            statut: false
-          }
-          // ajouter le nouveau produit dans la liste
-          // this.productList.push(newProduct)
-          // ajouter a firebase
-          this.database.push(this.user.uid, newProduct)
-
-          console.log(this.productList);
-          // this.initUI()
-          e.target.value = ''
+      // catch only if user press ENTER
+      if(e.keyCode != 13){
+        // if not return and the res of the code with not run ;-)
+        return;
       }
+      console.log(e.target.value);
+      // formater le nouveau produit
+      let newProduct = {
+        name: e.target.value,
+        statut: false
+      }
+      // ajouter le nouveau produit dans firebase
+      this.database.push(this.user.uid, newProduct)
+      // initialiser l'input
+      e.target.value = ''
     })
 
     document.querySelector('ul').addEventListener('click',e => {
@@ -81,9 +65,8 @@ export class ProductsList {
         productItem.childNodes[1].classList.contains('lineThrough') &&
         e.target.classList.contains('del')
       ){
-        // supprimer l'element (avec index) du tableau de produits
-        // this.productList.splice(productItem.id, 1)
-        console.log('prod', productItem.dataset.fbid);
+        // supprimer l'element avec firebase
+        // console.log('prod', productItem.dataset.fbid);
         this.database.delete(this.user.uid, productItem.dataset.fbid)
       }
       else if (
@@ -97,13 +80,58 @@ export class ProductsList {
         // sinon c'est qu'on a pas cliqué sur une icon => donc on trace le produit ;-)
         let statut  = !productItem.childNodes[1].classList.contains('lineThrough');
         let pID = productItem.dataset.fbid;
-        console.log(pID);
-        this.database.update(this.user.uid, pID, statut);
+        let dataToUpdate = {
+          statut: statut
+        }
+        this.database.update('productList', this.user.uid, pID, dataToUpdate);
       }
-      // Et on recharger la vue dans tous les cas
-      // this.initUI()
     })
   }
+
+  firebaseEvent(uid){
+    // get firebase collection ref() with .read('YOUR_COLLECTION')
+    let productListRef =this.database.read('productList')
+
+    /**
+     * Firebase Event for CHILD_ADDED
+     */
+    productListRef.child(uid).on('child_added', snapshot => {
+    //productListRef.orderByChild('statut').equalTo(true).on('child_added', snapshot => {
+      console.log('child_added', snapshot.val());
+      // Get product item skeleton from ./products-list-ui.js (don't forguet to updat import)
+      let newProduct = productItemSkeleton(snapshot)
+      // check if element exist before add skeleton
+      if(document.querySelector('ul.collection')){
+        document.querySelector('ul.collection').insertAdjacentHTML('beforeend', newProduct)
+      }
+    });
+
+    /**
+     * Firebase Event for CHILD_CHANGED
+     */
+     productListRef.child(uid).on('child_changed', snapshot => {
+       console.log('child_changed->', snapshot.key ,snapshot.val());
+       // find element in DOM with snapshot.key
+       let item = document.querySelector('[data-fbid="'+snapshot.key+'"]')
+       // Check if eleme t exist before change class
+       if(item){
+         item.childNodes[1].classList.toggle('lineThrough')
+       }
+     });
+
+     /**
+      * Firebase Event for CHILD_REMOVED
+      */
+      productListRef.child(uid).on('child_removed', snapshot => {
+        let elementLI = document.querySelector('[data-fbid="'+snapshot.key+'"]');
+        console.log('child_removed ->', elementLI);
+        // Check if element exist before remove
+        if(elementLI){
+          elementLI.parentNode.removeChild(elementLI)
+        }
+      })
+  }
+
 }
 
 

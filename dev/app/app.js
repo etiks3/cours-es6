@@ -3,7 +3,7 @@
  * @Date:   28-06-2017
  * @Email:  contact@nicolasfazio.ch
  * @Last modified by:   webmaster-fazio
- * @Last modified time: 07-07-2017
+ * @Last modified time: 10-07-2017
  */
 
 import { HomePage } from './pages/home/home';
@@ -32,14 +32,14 @@ class MyApp {
     firebase.auth().onAuthStateChanged((user)=> {
       if (user) {
         // User is signed in.
-        console.log('user auth', user);
+        //console.log('user auth', user);
         // envoyer l'user sur la page user.js
         new UserPage(this.app, user, '')
 
       } else {
         // No user is signed in.
         // envoyer l'user sur home.js
-        console.log('no user auth');
+        //console.log('no user auth');
         new HomePage(this.app)
 
       }

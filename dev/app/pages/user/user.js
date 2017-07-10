@@ -3,7 +3,7 @@
  * @Date:   28-06-2017
  * @Email:  contact@nicolasfazio.ch
  * @Last modified by:   webmaster-fazio
- * @Last modified time: 07-07-2017
+ * @Last modified time: 10-07-2017
  */
 
 import { userSkeleton, UserClassSkeleton } from './user-ui'
@@ -16,6 +16,7 @@ export class UserPage {
     this.user = userFB
     this.pwd = pwd
     this.initUI()
+    // init ProductsList component with user data
     new ProductsList(this.user);
     this.loadEventUI()
   }
@@ -25,21 +26,24 @@ export class UserPage {
     if(document.getElementsByTagName("section")[0]){
       document.getElementsByTagName("section")[0].parentNode.removeChild(document.getElementsByTagName("section")[0])
     }
+    // defin object to pass data into skeleton
     let data = {
       email: this.email,
       pwd: this.pwd,
       desc: 'demo passage info',
       autreTest: 'Encore des info'
     }
-
-    this.app.insertAdjacentHTML('afterbegin', userSkeleton(data/*, this.productList*/))
-    //this.app.insertAdjacentHTML('afterbegin', UserClassSkeleton.get(data, this.productList))
+    // add sjkeleton to DOM
+    this.app.insertAdjacentHTML('afterbegin', userSkeleton(data))
+    //this.app.insertAdjacentHTML('afterbegin', UserClassSkeleton.get(data))
   }
 
   loadEventUI(){
-
-    document.querySelector('form').addEventListener('submit', e =>{
-      e.preventDefault()
-    })
+    // test if element exist befor add EventListener()
+    if(document.querySelector('form')){
+      document.querySelector('form').addEventListener('submit', e =>{
+        e.preventDefault()
+      })
+    }
   }
 }
